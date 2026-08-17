@@ -35,7 +35,7 @@ func GeneratePassword(length int, useUppers bool, useNumbers bool, useSymbols bo
 		requiredSets = append(requiredSets, symbolChars)
 	}
 
-	if length <= len(requiredSets) {
+	if length < len(requiredSets) {
 		return "", fmt.Errorf("Password length must be at least %d to include all selected character types\n", len(requiredSets))
 	}
 

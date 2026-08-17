@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/atotto/clipboard"
 	"github.com/casuncio/passmith/pkg/generator"
 )
 
@@ -23,6 +24,7 @@ func main() {
 	includeNumbers := flag.Bool("numbers", true, "Include numbers")
 	includeSymbols := flag.Bool("symbols", true, "Include special symbols")
 	customSymbols := flag.String("custom-symbols", "", "Override default symbol set i.e. \"$&_-+=\"")
+	toClipboard := flag.Bool("clip", false, "Copy generated password to clipboard")
 
 	flag.Parse()
 
@@ -33,5 +35,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(password)
+	// Copy to clipboard or print to screen
+	if *toClipboard {
+		err = clipboard.WriteAll(password)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to copy to clipboard: %v\n", err)
+		} else {
+			fmt.Fprintln(os.Stderr, "Password copied to clipboard.")
+		}
+	} else {
+		fmt.Println(password)
+	}
 }
